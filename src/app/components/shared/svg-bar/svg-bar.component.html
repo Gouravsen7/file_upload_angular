@@ -1,0 +1,91 @@
+<div class="container">
+  <ng-container *ngIf="isLoading; else noRecordsContentTemplate">
+    <div class="flex-centered-section">
+      <mat-progress-spinner class="mall-spinner" mode="indeterminate"></mat-progress-spinner>
+      <span class="loading-text">Loading...</span>
+    </div>
+  </ng-container>
+
+  <ng-template #noRecordsContentTemplate>
+    <div *ngIf="paginationData.totalSvgRecord == 0 else svgContent" class="flex-centered-section">
+      <p>No records available.</p>
+    </div>
+  </ng-template>
+
+  <ng-template #svgContent>
+    <div class="data-wrapper">
+      <div class="data-legend-wrapper">
+        <h3>Data Legend Table - {{fileName}}</h3>
+        <table mat-table [dataSource]="dataSource" class="legend-table  mat-elevation-z8">
+        
+           <!-- Data Legend Column -->
+          <ng-container matColumnDef="property">
+            <th mat-header-cell *matHeaderCellDef>  Data Legend </th>
+            <td mat-cell *matCellDef="let element"> {{ element.colorRange.property }} </td>
+          </ng-container>
+        
+         <!-- Range one Column -->
+          <ng-container matColumnDef="rangeOne">
+            <th mat-header-cell *matHeaderCellDef class="red-cell"></th>
+            <td mat-cell *matCellDef="let element"> {{element.colorRange.rangeOne}} </td>
+          </ng-container>
+        
+          <!-- Range two Column -->
+          <ng-container matColumnDef="rangeTwo">
+            <th mat-header-cell *matHeaderCellDef class="blue-cell"></th>
+            <td mat-cell *matCellDef="let element"> {{ element.colorRange.rangeOne }} - {{ element.colorRange.rangeTwo }} </td>
+          </ng-container>
+        
+          <!-- Range three Column -->
+          <ng-container matColumnDef="rangeThree">
+            <th mat-header-cell *matHeaderCellDef class="yellow-cell"></th>
+            <td mat-cell *matCellDef="let element"> {{ element.colorRange.rangeTwo }} - {{ element.colorRange.rangeThree }} </td>
+          </ng-container>
+        
+          <!-- Range Four Column -->
+          <ng-container matColumnDef="rangeFour">
+            <th mat-header-cell *matHeaderCellDef class="green-cell"></th>
+            <td mat-cell *matCellDef="let element"> {{ element.colorRange.rangeFour }} </td>
+          </ng-container>
+
+          <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+          <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+        </table>
+      </div>
+      <div class="visualize-wrapper">
+        <div class="svg-container">
+          <svg width="475" height="320">
+            <ng-container *ngFor="let barGroup of bars; let j = index">
+              <rect
+                *ngFor="let bar of barGroup"
+                [attr.x]="bar.x + j * 100 + bar.width / 2"
+                [attr.y]="bar.y"
+                [attr.width]="bar.width - 20"
+                [attr.height]="bar.height"
+                [attr.fill]="bar.color"
+              >
+                <title>{{ bar.tooltipText }}</title>
+              </rect>
+            </ng-container>
+            <text
+              *ngFor="let head of barProperties; let i = index"
+              [attr.x]="100 + i * 100"
+              [attr.y]="310"
+              text-anchor="middle"
+              font-size="12"
+              fill="#000"
+              dominant-baseline="middle"
+              class="heading-text"
+            >
+              {{ head.header_title }}
+            </text>
+          </svg>
+        </div>
+      </div>
+    </div>
+  </ng-template>
+  <div>
+    <mat-paginator *ngIf= "paginationData.totalSvgRecord" [length]="paginationData.totalSvgRecord" (page)="onPageChange($event)" [pageSize]="1"></mat-paginator>
+  </div>
+
+</div>

@@ -1,31 +1,11 @@
 <div>
   <mat-toolbar color="primary">
     <span>Dashboard Page</span>
-    <span class="example-spacer"></span>
+    <span class="spacer"></span>
     <button mat-icon-button class="example-icon" aria-label="Example icon-button with share icon" (click)="logout()">
       <mat-icon>logout</mat-icon>
     </button>
   </mat-toolbar>
-
-  <app-file-upload (fetchDataEvent)="fetchData()" ></app-file-upload>
-  
-  <ng-container *ngIf="isLoading; else content">
-    <div class="container">
-      <mat-progress-spinner class="mall-spinner" mode="indeterminate"></mat-progress-spinner>
-      <span class="loading-text">Loading...</span>
-    </div>
-  </ng-container>
-
-  <ng-template #content>
-    <div *ngIf="totalSvgRecord == 0; else svgContent" class="container">
-      <p>No records available.</p>
-    </div>
-
-   <ng-template #svgContent>
-      <app-svg-bar [dataValue]="data"></app-svg-bar>
-      <div *ngIf="totalSvgRecord > 1">
-        <mat-paginator [length]="totalSvgRecord" (page)="onPageChange($event)" [pageSize]="1"></mat-paginator>
-      </div>
-    </ng-template>
-  </ng-template>
+    <app-file-upload></app-file-upload>
+    <app-svg-bar></app-svg-bar>
 </div>

@@ -1,27 +1,3 @@
-.example-spacer {
+.spacer {
     flex: 1 1 auto;
   }
-
-mat-paginator {
-  display: flex;
-  justify-content: start;
-  align-items: end;
-  margin-top:
-   20px;
-
-}
-mat-progress-spinner {
-  height: 30px !important;
-}
-
-.container {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-direction: column;
-  margin-top: 30px;
-}
-
-.loading-text {
-  margin-top: 10px; 
-}

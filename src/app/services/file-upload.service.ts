@@ -11,7 +11,7 @@ export class FileUploadService {
   constructor(private http: HttpClient) {}
 
   uploadFile(data: any): Observable<any> {
-    const uploadUrl = `${this.baseUrl}/hole`;
+    const uploadUrl = `${this.baseUrl}/file_upload`;
     return this.http.post(uploadUrl, data);
   }
 
@@ -22,6 +22,6 @@ export class FileUploadService {
 
   getData(page: number): Observable<any[]> {
     const params = { page: page.toString() };
-    return this.http.get<any[]>(`${this.baseUrl}/hole_details`, { params });
+    return this.http.get<any[]>(`${this.baseUrl}/data_visualization`, { params });
   }
 }

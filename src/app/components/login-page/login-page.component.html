@@ -13,7 +13,7 @@
           </mat-error>
         </mat-form-field>
         <mat-form-field appearance="fill">
-          <input matInput type="password" placeholder="Password" formControlName="password" />
+          <input matInput autocomplete type="password" placeholder="Password" formControlName="password" />
           <mat-error *ngIf="loginForm.get('password')!.hasError('required')">
             Password is required
           </mat-error>

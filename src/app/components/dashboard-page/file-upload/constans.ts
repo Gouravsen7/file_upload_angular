@@ -2,10 +2,8 @@ export const  EXPECTED_HEADERS: Array<string> = ['HoleId', 'HoleName', 'StartPoi
 
 export const CSV_ERROR_MESSAGES = {
     INVALID_FILE_TYPE: 'Invalid file type. Please upload a CSV file.',
-    INVALID_VALUE: 'Invalid value. Please check the CSV file values.',
-    MISSING_HEADERS: 'Missing headers. Please include all required headers.',
+    INVALID_VALUE: 'Invalid value. Please check the CSV file values and Headers',
     INVALID_CONTENT: 'Invalid content in the CSV file. Please check the data.',
-    HEADERS_MISSING: "Headers are missing. Please upload a file with headers.",
 
   };
 

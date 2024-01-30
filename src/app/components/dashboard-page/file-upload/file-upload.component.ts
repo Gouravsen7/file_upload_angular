@@ -21,9 +21,9 @@ export class FileUploadComponent implements OnInit {
 
   fileForm!: FormGroup;
   validType2Files: Array<string> = [];
-  hasNotHeaders: boolean = false;
   isFileUploaded: boolean = false;
   fileName!:string;
+  hasHaders: boolean  = false;
   errorMessage!: string;
 
   constructor(
@@ -63,7 +63,7 @@ export class FileUploadComponent implements OnInit {
 
   onSubmit() {
     const selectedFileValue = this.fileForm.get('file')?.value;
-    selectedFileValue && this.hasNotHeaders ? this.uploadFileWithHoleId(selectedFileValue) : this.uploadFileWithHeaders(selectedFileValue);
+    selectedFileValue && this.hasHaders ?  this.uploadFileWithHeaders(selectedFileValue) : this.uploadFileWithHoleId(selectedFileValue)
     this.removeFile();
     this.isFileUploaded = false;
   }
@@ -90,7 +90,6 @@ export class FileUploadComponent implements OnInit {
     formData.append('file', file);
     this.fileUploadService.upLoadFileHoleDetails(formData).subscribe(
       (res) => {
-        console.log(res)
       this.snackbarService.openSuccess(SUCCESS_MESSAGES.FILE_UPLOAD_SUCCESS);
     },
     (error) => {
@@ -100,44 +99,12 @@ export class FileUploadComponent implements OnInit {
     );
   }
 
-  checkValidFiles() {
-    const selectedFileValue = this.fileForm.get('file')?.value;
-    this.fileName = selectedFileValue.name
-    const uploadedFileName = this.fileName.toLowerCase().replace(/\.[^/.]+$/, '');
-    const isValidFileType = this.validType2Files.some((validFileName: string) => validFileName.toLowerCase() === uploadedFileName);
-    switch (true) {
-      case isValidFileType:
-        this.hasNotHeaders = false; 
-        this.readCSVFile(selectedFileValue);
-        break;
-      case selectedFileValue && selectedFileValue.name.endsWith('.csv'):
-        this.readCSVFile(selectedFileValue);
-        break;
-      default:
-        this.errorMessage = isValidFileType ? CSV_ERROR_MESSAGES.INVALID_FILE_TYPE : CSV_ERROR_MESSAGES.HEADERS_MISSING;
-        break;
-    }
-  } 
-  
-
-  readCSVFile(file: Blob): void  {
-    const reader = new FileReader();
-    reader.onload = (e: any) => {
-      const csvContent: string = e.target.result;
-      const rows = csvContent.split('\n');
-
-      if (!this.areValuesValid(rows.slice(1))) return;
-
-      if (this.hasNotHeaders && !this.areHeadersValid(rows[0])) {
-        this.errorMessage = CSV_ERROR_MESSAGES.MISSING_HEADERS;
-        return;
-      }
-      this.hasNotHeaders = !this.hasNotHeaders;   
-      this.errorMessage = '';
-    };
-
-    reader.readAsText(file);
-  }
+    checkValidFiles() {
+      const selectedFileValue = this.fileForm.get('file')?.value;
+      this.fileName = selectedFileValue.name
+      this.readCSVFile(selectedFileValue);
+    } 
+    
 
   private areValuesValid(dataRows: Array<string>): boolean {
     const invalidRowIndex = dataRows.findIndex((row) => {
@@ -152,9 +119,29 @@ export class FileUploadComponent implements OnInit {
     return true;
   }
 
+
+  readCSVFile(file: Blob): void {
+    const reader = new FileReader();
+    reader.onload = (e: any) => {
+      const csvContent: string = e.target.result;
+      const rows = csvContent.split('\n');
+      const headers = this.areHeadersValid(rows[0]);
+      const valueValid = this.areValuesValid(rows.slice(1)) ;
+      const uploadedFileName = this.fileName.toLowerCase().replace(/\.[^/.]+$/, '');
+      const isValidFileType = this.validType2Files.some((validFileName: string) => validFileName.toLowerCase() === uploadedFileName);
+      if (headers && valueValid || ( isValidFileType && valueValid)) {
+        this.hasHaders = headers;
+      } else {
+        this.errorMessage = CSV_ERROR_MESSAGES.INVALID_VALUE;
+      }
+    };
+    reader.readAsText(file);
+  }
+
   private areHeadersValid(headerRow: string): boolean {
     const headers = headerRow.split(',');
     return headers.length === EXPECTED_HEADERS.length && EXPECTED_HEADERS.every((header:string, index: number) => header === headers[index]);
   }
+  
 
 }

@@ -7,6 +7,7 @@ import { MatCardModule }from "@angular/material/card"
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatPaginatorModule } from '@angular/material/paginator';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 
 @NgModule({
 	exports:[
@@ -17,7 +18,8 @@ import { MatPaginatorModule } from '@angular/material/paginator';
 		MatToolbarModule,
 		MatCardModule,
 		MatSnackBarModule,
-		MatPaginatorModule
+		MatPaginatorModule,
+		MatProgressSpinnerModule
 	]
 })
 export class MaterialModule { }

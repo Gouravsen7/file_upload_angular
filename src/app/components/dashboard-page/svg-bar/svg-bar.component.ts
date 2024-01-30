@@ -51,8 +51,9 @@ export class SvgLoaderComponent {
     return array.slice(1).map((value, index) => value - array[index]);
   }
   
-  getColor(value: number, maxPenetrationRate:number): string {
-    const maxRange = maxPenetrationRate / 4;
+  getColor(value: number, max:number): string {
+    const maxRange = max / 4;
+    console.log(maxRange)
     const colorFunction =  this.getColorForRange(value, maxRange);
     console.table([value, colorFunction]);
     return colorFunction;
@@ -66,6 +67,8 @@ export class SvgLoaderComponent {
         return '#2F00F9';
       case value <= 3 * maxRange:
         return '#FCFF42';
+      case value >  4 * maxRange:
+        return '#2F7F18';
       default:
         return '#2F7F18';
     }

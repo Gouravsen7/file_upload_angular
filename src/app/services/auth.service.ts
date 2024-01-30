@@ -21,8 +21,8 @@ export class AuthService {
           this.router.navigateByUrl('/dashboard');
           this.snackbarService.openSuccess(response.message);
         }
-      }, error => {
-        console.error('Error', error);
+      }, (error) => {
+        console.log('Error', error.error);
       });
   }
 

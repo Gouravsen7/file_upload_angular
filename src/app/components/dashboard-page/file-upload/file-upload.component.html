@@ -1,13 +1,45 @@
-<div>
-  <form [formGroup]="uploadForm" (ngSubmit)="onSubmit()" >
-    <div class="upload_section">
-        <mat-icon (click)="fileInput.click()" >cloud_upload</mat-icon>
-        <input type="file"  class="file-input" #fileInput  id="file" (change)="onFileChange($event)" accept=".csv" />
+<!-- <div class="upload-container">
+  <form [formGroup]="fileForm" (ngSubmit)="onSubmit()">
+    <div class="upload-section">
+      <label for="fileInput" class="file-label" [ngClass]="{'uploaded': isFileUploaded, 'error': errorMessage}">
+        <mat-icon class="upload-icon">cloud_upload</mat-icon>
+        {{ isFileUploaded ? 'File Uploaded' : 'Choose File' }}
+      </label>
+      <input type="file" class="file-input" #fileInput id="fileInput" (change)="onFileChange($event)" accept=".csv" />
       <div class="file-upload">
-        {{fileName || "No file uploaded yet."}}
+        <span class="file-name">{{ fileName || "No file uploaded yet." }}</span>
+        <button mat-icon-button *ngIf="fileName" (click)="removeFile()">
+          <mat-icon style="color: red;">delete</mat-icon>
+        </button>
       </div>
     </div>
-    <button type="submit" class="submit-button" color="primary" mat-raised-button>Submit</button>
+    <div>      
+      <mat-error *ngIf="errorMessage" class="error-message">{{ errorMessage }}</mat-error>
+    </div>
+    <button type="submit" class="submit-button" color="primary" mat-raised-button [disabled]="!!errorMessage || !fileName">Upload</button>
   </form>
-  <mat-error *ngIf="errorMessage" class="error-message">{{ errorMessage }}</mat-error>
+</div> -->
+
+
+
+<div class="upload-container">
+  <form [formGroup]="fileForm" (ngSubmit)="onSubmit()">
+    <div class="upload-section">
+      <label for="fileInput" class="file-label" [ngClass]="{'file-uploaded': isFileUploaded, 'file-error': errorMessage}">
+        <mat-icon class="upload-icon">cloud_upload</mat-icon>
+        {{ isFileUploaded ? 'File Uploaded' : 'Choose File' }}
+      </label>
+      <input type="file" class="file-input" #fileInput id="fileInput" (change)="onFileChange($event)" accept=".csv" />
+      <div class="file-upload">
+        <span class="file-name">{{ fileName || "No file uploaded yet." }}</span>
+        <button mat-icon-button *ngIf="fileName" (click)="removeFile()">
+          <mat-icon style="color: red;">delete</mat-icon>
+        </button>
+      </div>
+    </div>
+    <div>
+      <mat-error *ngIf="errorMessage" class="error-message">{{ errorMessage }}</mat-error>
+    </div>
+    <button type="submit" class="submit-button" color="primary" mat-raised-button [disabled]="!!errorMessage || !fileName">Upload</button>
+  </form>
 </div>

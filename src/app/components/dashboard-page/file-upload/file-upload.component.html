@@ -1,0 +1,15 @@
+<div>
+  <form [formGroup]="uploadForm" (ngSubmit)="onSubmit()" >
+    <div class="upload_section">
+      <button mat-icon-button (click)="fileInput.click()">
+        <mat-icon>cloud_upload</mat-icon>
+      </button>
+      <input type="file"  class="file-input" #fileInput  id="file" (change)="onFileChange($event)" accept=".csv" />
+      <div class="file-upload">
+        {{fileName || "No file uploaded yet."}}
+      </div>
+    </div>
+    <button type="submit" color="primary" mat-raised-button>Submit</button>
+  </form>
+  <mat-error *ngIf="errorMessage" class="error-message">{{ errorMessage }}</mat-error>
+</div>

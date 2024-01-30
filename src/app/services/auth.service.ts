@@ -22,7 +22,7 @@ export class AuthService {
           this.snackbarService.openSuccess(response.message);
         }
       }, (error) => {
-        console.log('Error', error.error);
+        this.snackbarService.openError(error.error.error);//checking
       });
   }
 

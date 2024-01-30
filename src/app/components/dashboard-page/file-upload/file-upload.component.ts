@@ -1,5 +1,5 @@
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
+import { Component, ElementRef, EventEmitter, OnInit, Output, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
 import { MaterialModule } from '@app/material.module';
@@ -18,6 +18,7 @@ import { EXPECTED_HEADERS, CSV_ERROR_MESSAGES, SUCCESS_MESSAGES } from './consta
 export class FileUploadComponent implements OnInit {
   @ViewChild('fileInput')
   fileInput!: ElementRef;
+  @Output() fetchDataEvent: EventEmitter<void> = new EventEmitter<void>();
 
   fileForm!: FormGroup;
   validType2Files: Array<string> = [];
@@ -90,6 +91,7 @@ export class FileUploadComponent implements OnInit {
     formData.append('file', file);
     this.fileUploadService.upLoadFileHoleDetails(formData).subscribe(
       (res) => {
+        this.fetchDataEvent.emit();
       this.snackbarService.openSuccess(SUCCESS_MESSAGES.FILE_UPLOAD_SUCCESS);
     },
     (error) => {

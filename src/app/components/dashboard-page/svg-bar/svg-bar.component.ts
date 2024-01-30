@@ -1,15 +1,17 @@
-import { Component, ElementRef, Input, NO_ERRORS_SCHEMA, SimpleChanges } from '@angular/core';
+import { CUSTOM_ELEMENTS_SCHEMA, Component, Input, NO_ERRORS_SCHEMA, SimpleChanges } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
-import { Bars} from './svg.interface';
+import { Bars,} from './svg.interface';
+import { MatTableDataSource } from '@angular/material/table';
+import { MaterialModule } from '@app/material.module';
 
 @Component({
   selector: 'app-svg-bar',
   standalone: true,
-  imports: [ CommonModule ],
+  imports: [ CommonModule, MaterialModule],
   templateUrl: './svg-bar.component.html',
   styleUrl: './svg-bar.component.scss',
-  schemas:[NO_ERRORS_SCHEMA]
+  schemas:[NO_ERRORS_SCHEMA, CUSTOM_ELEMENTS_SCHEMA]
 })
 
 export class SvgLoaderComponent {
@@ -21,7 +23,10 @@ export class SvgLoaderComponent {
   distanceArr: Array<number>  = [];
   bars:Bars[][] = [];
   scale: number = 300;
-
+  dataColorRangeTable: Array<any> = [];
+  displayedColumns: string[] = ['property', 'red', 'blue', 'yellow', 'green'];
+  dataSource = new MatTableDataSource<any>(Object.entries(this.dataColorRangeTable));
+  
   constructor() {}
 
   ngOnChanges(changes: SimpleChanges) {
@@ -31,6 +36,7 @@ export class SvgLoaderComponent {
       this.heading = [];
       this.processData(changes['dataValue'].currentValue);
       this.renderBars();
+      this.dataSource.data = this.dataColorRangeTable;
     }
   }
 
@@ -51,14 +57,6 @@ export class SvgLoaderComponent {
     return array.slice(1).map((value, index) => value - array[index]);
   }
   
-  getColor(value: number, max:number): string {
-    const maxRange = max / 4;
-    console.log(maxRange)
-    const colorFunction =  this.getColorForRange(value, maxRange);
-    console.table([value, colorFunction]);
-    return colorFunction;
-  }
-
   getColorForRange(value:number, maxRange:number): string  {
     switch (true) {
       case value < maxRange:
@@ -67,7 +65,7 @@ export class SvgLoaderComponent {
         return '#2F00F9';
       case value <= 3 * maxRange:
         return '#FCFF42';
-      case value >  4 * maxRange:
+      case value > 4 * maxRange:
         return '#2F7F18';
       default:
         return '#2F7F18';
@@ -75,20 +73,33 @@ export class SvgLoaderComponent {
   };
 
   renderBars() {
+    this.dataColorRangeTable = [];
     this.heading.forEach((head) => {
       const type2Data: Array<number> = this.dataValue.records.map((val: any) => val[head]);
-      const maxPenetrationRate = Math.max(...type2Data);
-      const barsForHead = this.normalizeDepth.map((depth, index) => ({
+      const maxRange = Math.max(...type2Data) / 4;
+      this.getRange(head, maxRange)  ;
+      const barsForHead = this.depth.map((depth, index) => ({
         x: 20 ,
-        y: depth * this.scale ,
+        y: depth * 20,
         width: 80,
-        height: Math.abs(this.distanceArr[index]) * 300,
-        color: this.getColor(type2Data[index], maxPenetrationRate),
+        height: Math.abs(174.581 - 187), /// zstart and zend
+        color: this.getColorForRange(type2Data[index], maxRange),
         tooltipText: `Depth ${this.depth[index]}\n\n ${head}: ${type2Data[index]}`,
         heading: head,
       }));
       this.bars.push(barsForHead);
     });
+  }
+
+  getRange(head: string, maxRange: number) {
+    const colorRange = {
+      property: head,
+      red: (maxRange * 1).toFixed(2),
+      bule: (maxRange * 2).toFixed(2),
+      yellow: (maxRange * 3).toFixed(2),
+      green: (maxRange * 4).toFixed(2), //verfily?
+    };
+    this.dataColorRangeTable.push({ colorRange }); 
   }
 
 }

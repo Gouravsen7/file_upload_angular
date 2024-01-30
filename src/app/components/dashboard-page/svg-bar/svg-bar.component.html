@@ -1,26 +1,65 @@
-<div class="svg-container">
-  <svg width="475" height="320">  
-    <ng-container *ngFor="let barGroup of bars; let j = index">
-      <rect
-        *ngFor="let bar of barGroup"
-        [attr.x]="bar.x + j * 100 + bar.width / 2"
-        [attr.y]="bar.y"
-        [attr.width]="bar.width - 20"
-        [attr.height]="bar.height"
-        [attr.fill]="bar.color"
-      >
-        <title>{{ bar.tooltipText }}</title>
-      </rect>
+<div class="container">
+
+  <mat-table [dataSource]="dataSource" class="custom-table">
+    <!-- Property Column -->
+    <ng-container matColumnDef="property">
+      <mat-header-cell *matHeaderCellDef> Property </mat-header-cell>
+      <mat-cell *matCellDef="let element"> {{ element.colorRange.property}} </mat-cell>
     </ng-container>
-    <text *ngFor="let head of heading; let i = index"
-          [attr.x]="100 + i * 100"
-          [attr.y]="310"
-          text-anchor="middle"
-          font-size="12"
-          fill="#000"
-          dominant-baseline="middle"
-          class="heading-text">
-      {{ head }}
-    </text>
-  </svg>
+
+    <!-- Red Column -->
+    <ng-container matColumnDef="red">
+      <mat-header-cell *matHeaderCellDef class="red-cell"></mat-header-cell>
+      <mat-cell *matCellDef="let element"> < {{ element.colorRange.red }} </mat-cell>
+    </ng-container>
+
+    <!-- Blue Column -->
+    <ng-container matColumnDef="blue">
+      <mat-header-cell *matHeaderCellDef class="bule-cell"></mat-header-cell>
+      <mat-cell *matCellDef="let element"> {{ element.colorRange.red }} - {{ element.colorRange.bule }} </mat-cell>
+    </ng-container>
+
+    <!-- Green Column -->
+    <ng-container matColumnDef="yellow">
+      <mat-header-cell *matHeaderCellDef class="yellow-cell"></mat-header-cell>
+      <mat-cell *matCellDef="let element"> {{ element.colorRange.bule }} - {{ element.colorRange.yellow  }} </mat-cell>
+    </ng-container>
+
+
+    <!-- Yellow Column -->
+    <ng-container matColumnDef="green">
+      <mat-header-cell *matHeaderCellDef class="green-cell"></mat-header-cell>
+      <mat-cell *matCellDef="let element"> >{{ element.colorRange.yellow  }} </mat-cell>
+    </ng-container>
+
+    <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+    <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
+  </mat-table>
+
+  <div class="svg-container">
+    <svg width="475" height="320">  
+      <ng-container *ngFor="let barGroup of bars; let j = index">
+        <rect
+          *ngFor="let bar of barGroup"
+          [attr.x]="bar.x + j * 100 + bar.width / 2"
+          [attr.y]="bar.y"
+          [attr.width]="bar.width - 20"
+          [attr.height]="bar.height"
+          [attr.fill]="bar.color"
+        >
+          <title>{{ bar.tooltipText }}</title>
+        </rect>
+      </ng-container>
+      <text *ngFor="let head of heading; let i = index"
+            [attr.x]="100 + i * 100"
+            [attr.y]="310"
+            text-anchor="middle"
+            font-size="12"
+            fill="#000"
+            dominant-baseline="middle"
+            class="heading-text">
+        {{ head }}
+      </text>
+    </svg>
+  </div>
 </div>

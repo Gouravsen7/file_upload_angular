@@ -16,7 +16,7 @@ export class FileUploadService {
   }
 
   upLoadFileHoleDetails(data: any): Observable<any>{
-    const uploadUrl = `${this.baseUrl}/hole_details`;
+    const uploadUrl = `${this.baseUrl}/data_visualization`;
     return this.http.post(uploadUrl, data,);
   }
 

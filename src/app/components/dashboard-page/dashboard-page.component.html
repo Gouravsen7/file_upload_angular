@@ -7,7 +7,7 @@
     </button>
   </mat-toolbar>
 
-  <app-file-upload></app-file-upload>
+  <app-file-upload (fetchDataEvent)="fetchData()" ></app-file-upload>
   
   <ng-container *ngIf="isLoading; else content">
     <div class="container">

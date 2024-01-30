@@ -27,7 +27,6 @@ export class DashboardPageComponent  {
   ngOnInit() {
     this.fetchData();
   }
-  
 
   fetchData(): void {
     this.fileUploadService.getData(this.currentPage).subscribe(

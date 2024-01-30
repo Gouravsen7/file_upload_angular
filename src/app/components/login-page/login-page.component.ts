@@ -17,7 +17,9 @@ import { AuthService } from '@services/auth.service';
 export class LoginPageComponent implements OnInit  {
 
   loginForm!: FormGroup; 
-  constructor(private formBuilder: FormBuilder, private authService: AuthService) { }
+  constructor(
+    private formBuilder: FormBuilder, 
+    private authService: AuthService) { }
 
   ngOnInit(): void {
     this.initializeForm();

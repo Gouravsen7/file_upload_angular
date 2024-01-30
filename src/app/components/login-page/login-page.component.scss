@@ -2,8 +2,10 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  // margin-right: 40px;
   height: 100vh; 
+  background-image: url(https://img.freepik.com/free-vector/gradient-connection-background_52683-116380.jpg?size=626&ext=jpg&ga=GA1.1.1448711260.1706400000&semt=ais);
+  background-repeat: no-repeat;
+  background-size: cover;
 }
 
 .form-container {
@@ -34,3 +36,5 @@ button {
 .text-center {
   text-align: center;
 }
+
+

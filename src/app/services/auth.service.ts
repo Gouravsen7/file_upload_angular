@@ -21,21 +21,32 @@ export class AuthService {
           this.router.navigateByUrl('/dashboard');
           this.snackbarService.openSuccess(response.message);
         }
-      }, (error) => {
-        this.snackbarService.openError(error.error.error);//checking
+      }, (e) => {
+        this.snackbarService.openError(e.error.message);
       });
   }
 
-  logout(): void {
-    localStorage.removeItem('token');
-    this.router.navigateByUrl('/login');
-    this.snackbarService.openSuccess("You have logged out successfully");
+  logout() {
+    const accessToken = localStorage.getItem('token');
+    return this.http.delete(`${this.apiUrl}/logout`,{ headers: {
+      'token': accessToken || '',
+    }}).subscribe((response: any) => {
+      this.removeLocalStorageItem();
+      this.router.navigateByUrl('/login');
+      this.snackbarService.openSuccess(response.message);
+  
+    }, (e) => {
+      this.snackbarService.openError(e.error.message);
+    });;
+    
   }
 
   isAuthenticated(): boolean {
-    // !!localStorage.getItem('token') ||
-    return true;
+    return !!localStorage.getItem('token');
   }
 
-
+  removeLocalStorageItem() {
+    localStorage.removeItem('token');
+    localStorage.removeItem('keys');
+  }
 }

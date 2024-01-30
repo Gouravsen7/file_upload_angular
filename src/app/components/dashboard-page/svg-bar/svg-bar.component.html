@@ -1,0 +1,26 @@
+<div class="svg-container">
+  <svg width="475" height="320">  
+    <ng-container *ngFor="let barGroup of bars; let j = index">
+      <rect
+        *ngFor="let bar of barGroup"
+        [attr.x]="bar.x + j * 100 + bar.width / 2"
+        [attr.y]="bar.y"
+        [attr.width]="bar.width - 20"
+        [attr.height]="bar.height"
+        [attr.fill]="bar.color"
+      >
+        <title>{{ bar.tooltipText }}</title>
+      </rect>
+    </ng-container>
+    <text *ngFor="let head of heading; let i = index"
+          [attr.x]="100 + i * 100"
+          [attr.y]="310"
+          text-anchor="middle"
+          font-size="12"
+          fill="#000"
+          dominant-baseline="middle"
+          class="heading-text">
+      {{ head }}
+    </text>
+  </svg>
+</div>

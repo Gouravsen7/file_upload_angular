@@ -19,7 +19,7 @@ export class AuthService {
         if (response && response.token) {
           localStorage.setItem('token', response.token);
           this.router.navigateByUrl('/dashboard');
-          this.snackbarService.openSnackBar(response.message);
+          this.snackbarService.openSuccess(response.message);
         }
       }, error => {
         console.error('Error', error);
@@ -29,12 +29,12 @@ export class AuthService {
   logout(): void {
     localStorage.removeItem('token');
     this.router.navigateByUrl('/login');
-    this.snackbarService.openSnackBar("You have logged out successfully");
+    this.snackbarService.openSuccess("You have logged out successfully");
   }
 
   isAuthenticated(): boolean {
     // !!localStorage.getItem('token') ||
-    return  true;
+    return true;
   }
 
 

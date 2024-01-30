@@ -1,3 +1,10 @@
 .example-spacer {
     flex: 1 1 auto;
   }
+
+mat-paginator {
+  display: flex;
+  justify-content: start;
+  align-items: end;
+  margin-top: 20px;
+}

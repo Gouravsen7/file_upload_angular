@@ -1,9 +1,18 @@
-<mat-toolbar color="primary">
-  <span>Dashboard Page</span>
-  <span class="example-spacer"></span>
-  <button mat-icon-button class="example-icon" aria-label="Example icon-button with share icon" (click)="logout()">
-    <mat-icon>logout</mat-icon>
-  </button>
-</mat-toolbar>
-
-<app-file-upload></app-file-upload>
+<div>
+  <mat-toolbar color="primary">
+    <span>Dashboard Page</span>
+    <span class="example-spacer"></span>
+    <button mat-icon-button class="example-icon" aria-label="Example icon-button with share icon" (click)="logout()">
+      <mat-icon>logout</mat-icon>
+    </button>
+  </mat-toolbar>
+  <div>
+    <app-file-upload></app-file-upload>
+  </div>
+  <div>
+    <app-svg-bar [dataValue]="data"></app-svg-bar>
+  </div>
+  <div>
+    <mat-paginator [length]="10"  (page)="onPageChange($event)" [pageSize]="selectedItemsPerPage"></mat-paginator>
+  </div>
+</div>

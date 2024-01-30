@@ -12,9 +12,16 @@ export class FileUploadService {
 
   uploadFile(data: any): Observable<any> {
     const uploadUrl = `${this.baseUrl}/hole`;
-    const formData = new FormData();
-    formData.append('file', data);
-    return this.http.post(uploadUrl, formData);
+    return this.http.post(uploadUrl, data);
   }
 
+  upLoadFileHoleDetails(data: any): Observable<any>{
+    const uploadUrl = `${this.baseUrl}/hole_details`;
+    return this.http.post(uploadUrl, data,);
+  }
+
+  getData(page: number): Observable<any[]> {
+    const params = { page: page.toString() };
+    return this.http.get<any[]>(`${this.baseUrl}/hole_details`, { params });
+  }
 }

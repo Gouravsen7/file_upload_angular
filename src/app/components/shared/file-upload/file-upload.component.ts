@@ -1,13 +1,12 @@
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Component, ElementRef, EventEmitter, OnInit, Output, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
-
 import { MaterialModule } from '@app/material.module';
-import { FileUploadService } from '@app/services/file-upload.service';
-import { SnackbarService } from '@app/services/snackbar.service';
-import { EXPECTED_HEADERS, CSV_ERROR_MESSAGES, SUCCESS_MESSAGES } from './constants.js';
-import { SharedService } from '@app/services/shared.service.js';
+
+import { LocalStorageService, SnackbarService, FileUploadService, SharedService } from '@app/services';
+import { EXPECTED_HEADERS, CSV_ERROR_MESSAGES, SUCCESS_MESSAGES } from './constants';
 import { FileUpload, CsvFileValdiation } from './file-upload.interface.js';
+import { stringify } from 'querystring';
 
 @Component({
   selector: 'app-file-upload',
@@ -18,12 +17,13 @@ import { FileUpload, CsvFileValdiation } from './file-upload.interface.js';
 })
 
 export class FileUploadComponent implements OnInit {
+
   @ViewChild('fileInput')
   fileInput!: ElementRef;
   @Output() fetchDataEvent: EventEmitter<void> = new EventEmitter<void>();
-
   fileForm!: FormGroup;
   validType2Files: Array<string> = [];
+
   fileObj: FileUpload = {
     fileName: "",
     type: "",
@@ -35,7 +35,8 @@ export class FileUploadComponent implements OnInit {
     private formBuilder: FormBuilder, 
     private fileUploadService : FileUploadService, 
     private snackbarService: SnackbarService,
-    private sharedService: SharedService
+    private sharedService: SharedService,
+    private localStorageService: LocalStorageService
     ) 
     { }
   
@@ -43,8 +44,7 @@ export class FileUploadComponent implements OnInit {
     this.fileForm = this.formBuilder.group({
       file: ['', [Validators.required]]
     });
-    const storedData = localStorage.getItem('keys');
-    this.validType2Files = storedData ? JSON.parse(storedData) : []; 
+    this.validType2Files = this.localStorageService.getKeys();
   }
 
   removeFile(): void {
@@ -80,7 +80,7 @@ export class FileUploadComponent implements OnInit {
     this.fileUploadService.uploadFile(formData).subscribe(
       (res) => {
         this.validType2Files = res;
-        localStorage.setItem("keys", JSON.stringify(res));
+        this.localStorageService.setKeys(res);
         this.snackbarService.openSuccess(SUCCESS_MESSAGES.FILE_UPLOAD_SUCCESS);
       },
       (error) => {
@@ -111,31 +111,37 @@ export class FileUploadComponent implements OnInit {
     
   readCSVFile(file: Blob): void {
     const reader = new FileReader();
-    reader.onload = (e: any) => {
+    reader.onload = (e :ProgressEvent<any>) => {
       const csvContent: string = e.target.result;
       const rows = csvContent.split('\n');
       const uploadedFileName = this.fileObj.fileName.toLowerCase().replace(/\.[^/.]+$/, '')
-      const csvProcessingResult = {
+      const csvProcessingResult: CsvFileValdiation = {
         headers: this.areHeadersValid(rows[0]),
         valueValid: this.areValuesValid(rows.slice(1)),
-        isValidFileType: this.validType2Files.some((validFileName: any) => validFileName.hole_id.toLowerCase() === uploadedFileName)
       };
-      this.handleFileValidation(csvProcessingResult)
+
+      if (this.validType2Files.length > 0) {
+        csvProcessingResult.isValidFileType = this.validType2Files.some((validFileName: any) => validFileName.hole_id.toLowerCase() === uploadedFileName);
+      }
+      
+      this.handleFileValidation(csvProcessingResult);
     };
-    
     reader.readAsText(file);
   }
 
   handleFileValidation(val: CsvFileValdiation) {
-    if(!val.valueValid) return
+    if(!val.valueValid) return;
+
     const fileType = {
       isType1File: val.headers && val.valueValid,
       isType2File: val.isValidFileType && val.valueValid
     }
+
     if (fileType.isType1File || fileType.isType2File) {
       this.fileObj.type = val.headers ? "type1" : "type2"
     } else {
-      this.fileObj.errorMessage = !val.isValidFileType  ? CSV_ERROR_MESSAGES.TYPE1_FILE_REQUIRED : CSV_ERROR_MESSAGES.NO_MATCH_FILE;
+      const checkValidFile = (!val.isValidFileType && val.isValidFileType !== undefined)
+      this.fileObj.errorMessage = checkValidFile ?  CSV_ERROR_MESSAGES.NO_MATCH_FILE : CSV_ERROR_MESSAGES.TYPE1_FILE_REQUIRED ;
     }
   }
 
@@ -156,5 +162,4 @@ export class FileUploadComponent implements OnInit {
     const spiltHeaders = headerRow.split(',');
     return spiltHeaders.length === EXPECTED_HEADERS.length && EXPECTED_HEADERS.every((header:string, index: number) => header === spiltHeaders[index]);
   }
-
 }

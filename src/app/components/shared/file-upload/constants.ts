@@ -10,8 +10,7 @@ export const CSV_ERROR_MESSAGES = {
   TYPE1_FILE_REQUIRED: "Type1 CSV file is required."
 };
 
-  export const SUCCESS_MESSAGES = {
-    FILE_UPLOAD_SUCCESS: 'File uploaded successfully.',
-    FILE_REMOVE_SUCCESS: 'File removed successfully',
-  };
-  
+export const SUCCESS_MESSAGES = {
+  FILE_UPLOAD_SUCCESS: 'File uploaded successfully.',
+  FILE_REMOVE_SUCCESS: 'File removed successfully',
+};

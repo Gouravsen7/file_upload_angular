@@ -8,5 +8,5 @@
   export interface CsvFileValdiation {
     headers: boolean,
     valueValid: boolean,
-    isValidFileType: boolean
+    isValidFileType?: boolean
   }

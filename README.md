@@ -6,22 +6,37 @@ This project was generated with [Angular CLI](https://github.com/angular/angular
 
 Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The application will automatically reload if you change any of the source files.
 
-## Code scaffolding
+## Prerequisites
+Make sure you have the following installed:
 
-Run `ng generate component component-name` to generate a new component. You can also use `ng generate directive|pipe|service|class|guard|interface|enum|module`.
+Node.js: 18.18.2
+Angular CLI: 17.1.0
+Angular Material: ^17.1.0
 
-## Build
+## Requirement
+-Type1 file Required
 
-Run `ng build` to build the project. The build artifacts will be stored in the `dist/` directory.
+## Assumptions
 
-## Running unit tests
+1. File Upload:
+- Type1 CSV File:
+- Type1 CSV file is required.
 
-Run `ng test` to execute the unit tests via [Karma](https://karma-runner.github.io).
+2. Type2 CSV Files:
+- Multiple Type2 CSV files are assumed to exist.
+- Type2 file names are based on the hole_id column of the Type1 file.
 
-## Running end-to-end tests
+3. SVG Creation:
+- SVG total depth Determination.
+- SVG's total depth will be determined by the StartPointZ and EndPointZ columns of the Type1 file.
 
-Run `ng e2e` to execute the end-to-end tests via a platform of your choice. To use this command, you need to first add a package that implements end-to-end testing capabilities.
+4. SVG Display Name 
+- Each SVG will be named using the corresponding Type2 CSV file name.
 
-## Further help
+5. Color Palette:
+- Four colors are specified: #eb401d, #fcff42, #2f00f9, #2f7f18.
 
-To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI Overview and Command Reference](https://angular.io/cli) page.
+6. Color Assignment:
+- For each Type2 file, identify the maximum value across all columns.
+- Divide this maximum value by 4 to create four color groups/ranges.
+- Assign a color to each column value based on its group.

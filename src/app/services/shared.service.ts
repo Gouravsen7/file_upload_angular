@@ -1,12 +1,14 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, Subject } from 'rxjs';
+import { VisualizationData } from '@app/components/shared/svg-bar/svg.interface';
 
 @Injectable({
   providedIn: 'root',
 })
+
 export class SharedService {
   private fetchDataSubject = new Subject<void>();
-  private cachedDataSubject = new BehaviorSubject<any[]>([]);
+  private cachedDataSubject = new BehaviorSubject<VisualizationData[]>([]);
   cachedData$ = this.cachedDataSubject.asObservable();
   fetchData$ = this.fetchDataSubject.asObservable();
 
@@ -14,7 +16,7 @@ export class SharedService {
     this.fetchDataSubject.next();
   }
 
-  storeCachedSvgData(value:any[]) {
+  storeCachedSvgData(value: VisualizationData[]) {
     this.cachedDataSubject.next(value);
   }
 }

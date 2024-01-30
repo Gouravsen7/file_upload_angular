@@ -1,52 +1,41 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Router } from '@angular/router';
+import { Observable } from 'rxjs';
+import { map } from 'rxjs/operators';
 
-import { SnackbarService } from '@services/snackbar.service';
+import { LocalStorageService } from '@services/local-storage.service';
+import { environment } from './../../environments/environment';
 
 @Injectable({
   providedIn: 'root'
 })
 
 export class AuthService {
-  private apiUrl = 'http://localhost:3000'; 
+  private apiUrl = environment.baseUrl;
 
-  constructor(private http: HttpClient, private router: Router, private snackbarService:SnackbarService) {}
+  constructor(
+    private http: HttpClient,
+    private localStorageService: LocalStorageService
+  ) {}
 
-  login(credentials: { email: string, password: string }): void {
-    this.http.post<any>(`${this.apiUrl}/login`, credentials)
-      .subscribe(response => {
-        if (response && response.token) {
-          localStorage.setItem('token', response.token);
-          this.router.navigateByUrl('/dashboard');
-          this.snackbarService.openSuccess(response.message);
-        }
-      }, (e) => {
-        this.snackbarService.openError(e.error.message);
-      });
+  login(credentials: { email: string, password: string }): Observable<any> {
+    return this.http.post<any>(`${this.apiUrl}/login`, credentials)
+      .pipe(map((res: any) => {
+        this.localStorageService.setAccessToken(res.token);
+        return res;
+      }));
   }
-
-  logout() {
-    const accessToken = localStorage.getItem('token');
-    return this.http.delete(`${this.apiUrl}/logout`,{ headers: {
-      'token': accessToken || '',
-    }}).subscribe((response: any) => {
-      this.removeLocalStorageItem();
-      this.router.navigateByUrl('/login');
-      this.snackbarService.openSuccess(response.message);
   
-    }, (e) => {
-      this.snackbarService.openError(e.error.message);
-    });;
-    
+  logout():Observable<any> {
+    return this.http.delete(`${this.apiUrl}/logout`)
   }
 
   isAuthenticated(): boolean {
-    return !!localStorage.getItem('token');
+    return !!this.localStorageService.getAccessToken();
   }
 
   removeLocalStorageItem() {
-    localStorage.removeItem('token');
-    localStorage.removeItem('keys');
+    this.localStorageService.removeAccessToken();
+    this.localStorageService.removeKeys();
   }
 }

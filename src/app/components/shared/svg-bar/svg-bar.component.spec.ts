@@ -1,6 +1,8 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { SvgLoaderComponent } from './svg-bar.component';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
+
 
 describe('SvgLoaderComponent', () => {
   let component: SvgLoaderComponent;
@@ -8,7 +10,7 @@ describe('SvgLoaderComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [SvgLoaderComponent]
+      imports: [SvgLoaderComponent, HttpClientTestingModule]
     })
     .compileComponents();
     

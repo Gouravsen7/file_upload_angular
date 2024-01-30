@@ -57,6 +57,7 @@ export class SvgLoaderComponent {
     this.isLoading = true;
     this.sharedService.cachedData$.pipe(take(1)).subscribe((res) => {
       this.cachedVisualizationData = res;
+      
     })
 
     const findCachedData = this.cachedVisualizationData.find((res: any) => res.page === this.paginationData.currentPage);
@@ -70,6 +71,7 @@ export class SvgLoaderComponent {
           this.isNewFileUploaded = false;
           this.processData(data);
           this.isLoading = false;
+          this.paginationData.totalSvgRecord = result?.meta_data?.total_pages;
           this.sharedService.storeCachedSvgData([...this.cachedVisualizationData, { page: this.paginationData.currentPage, data: result.data }]);
         },
         (error) => {
@@ -85,7 +87,6 @@ export class SvgLoaderComponent {
     this.isLoading = false;
     this.dataValue = data;
     this.fileName = data?.file_name;
-    this.paginationData.totalSvgRecord = data?.metadata?.total_pages || 0;
     this.barProperties = Object.values(data?.header_data || {});
     this.depth = data.records?.map((val: any) => val.Depth);
     this.renderBars();

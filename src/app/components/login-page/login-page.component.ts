@@ -1,10 +1,10 @@
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { RouterModule } from '@angular/router';
+import { RouterModule, Router } from '@angular/router';
 
 import { MaterialModule } from '@app/material.module';
-import { AuthService } from '@services/auth.service';
+import { AuthService, SnackbarService } from '@services/index';
 
 @Component({
   selector: 'app-login-page',
@@ -18,8 +18,10 @@ export class LoginPageComponent implements OnInit  {
 
   loginForm!: FormGroup; 
   constructor(
+    private router: Router,
     private formBuilder: FormBuilder, 
-    private authService: AuthService) { }
+    private authService: AuthService,
+    private snackbarService:SnackbarService,) { }
 
   ngOnInit(): void {
     this.initializeForm();
@@ -27,7 +29,13 @@ export class LoginPageComponent implements OnInit  {
 
   onSubmit(): void {
     const {email, password } = this.loginForm.value;
-    this.authService.login({ email, password });
+    this.authService.login({ email, password }).subscribe(
+      (response: any) => {
+      this.router.navigateByUrl('/dashboard');
+      this.snackbarService.openSuccess(response.message);
+    }, (e) => {
+      this.snackbarService.openError(e.error.message);
+    });
   }
 
   initializeForm(): void {

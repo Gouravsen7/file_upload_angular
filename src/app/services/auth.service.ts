@@ -1,4 +1,4 @@
-import { Injectable, EventEmitter } from '@angular/core';
+import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
 
@@ -10,7 +10,6 @@ import { SnackbarService } from '@services/snackbar.service';
 
 export class AuthService {
   private apiUrl = 'http://localhost:3000'; 
-  private isAuthenticatedEmitter = new EventEmitter<boolean>();
 
   constructor(private http: HttpClient, private router: Router, private snackbarService:SnackbarService) {}
 
@@ -20,7 +19,6 @@ export class AuthService {
         if (response && response.token) {
           localStorage.setItem('token', response.token);
           this.router.navigateByUrl('/dashboard');
-          this.isAuthenticatedEmitter.emit(true);
           this.snackbarService.openSnackBar(response.message);
         }
       }, error => {
@@ -31,7 +29,6 @@ export class AuthService {
   logout(): void {
     localStorage.removeItem('token');
     this.router.navigateByUrl('/login');
-    this.isAuthenticatedEmitter.emit(false);
     this.snackbarService.openSnackBar("You have logged out successfully");
   }
 
@@ -40,7 +37,5 @@ export class AuthService {
     return  true;
   }
 
-  getIsAuthenticatedEmitter(): EventEmitter<boolean> {
-    return this.isAuthenticatedEmitter;
-  }
+
 }

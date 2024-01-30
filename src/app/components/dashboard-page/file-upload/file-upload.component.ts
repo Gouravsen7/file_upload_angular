@@ -4,6 +4,7 @@ import { CommonModule } from '@angular/common';
 
 import { MaterialModule } from '@app/material.module';
 import { FileUploadService } from '@app/services/file-upload.service';
+import { SnackbarService } from '@app/services/snackbar.service';
 
 @Component({
   selector: 'app-file-upload',
@@ -19,12 +20,16 @@ export class FileUploadComponent implements OnInit {
   expectedHeaders: Array<string> = ['HoleId', 'HoleName', 'StartPointX', 'StartPointY', 'StartPointZ', 'EndPointX', 'EndPointY', 'EndPointZ'];    
   fileName!:string;
   type2FileVaild: Array<string> = [] 
-  constructor(private fb: FormBuilder, private fileUploadService : FileUploadService) { }
+  constructor(private fb: FormBuilder, private fileUploadService : FileUploadService, private snackbarService:SnackbarService) { }
 
   ngOnInit() {
     this.uploadForm = this.fb.group({
       file: [null, [Validators.required]]
     });
+    const storedData = localStorage.getItem("keys");
+    if (storedData !== null) {
+      this.type2FileVaild = JSON.parse(storedData);
+    }
   }
 
   onFileChange(event: any) {
@@ -42,13 +47,16 @@ export class FileUploadComponent implements OnInit {
   
   onSubmit(): void {
     const file = this.uploadForm.get('file')?.value;
-      if (file) {
+    if (file) {
         this.fileUploadService.uploadFile(file).subscribe((res) => {
           this.type2FileVaild = res;
-          localStorage.setItem("key", res)
+          localStorage.setItem("keys", JSON.stringify(res))
+          this.uploadForm.reset();
+          this.snackbarService.openSnackBar("File Upload sucessfully");
+
         })
     } else {
-      console.error('File is null. Cannot submit empty file.');
+      console.log("test...")
     }
   }
   
